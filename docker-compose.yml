@@ -4,6 +4,6 @@ services:
   web:
     image: kooldev/php:8.1-nginx
     volumes:
-      - .:/app/public
+      - .:/app
     ports:
-      - 8090:80
+      - "8090:80"
