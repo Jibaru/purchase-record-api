@@ -50,6 +50,13 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "lint": [
+            "./vendor/bin/phpcbf config --standard=PSR12 app",
+            "./vendor/bin/phpcbf config --standard=PSR12 config",
+            "./vendor/bin/phpcbf config --standard=PSR12 core",
+            "./vendor/bin/phpcbf config --standard=PSR12 database",
+            "./vendor/bin/phpcbf config --standard=PSR12 routes"
         ]
     },
     "extra": {
