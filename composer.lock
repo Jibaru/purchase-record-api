@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aea71952182bbdbf157110a36bae4c19",
+    "content-hash": "311ad10d9e3a5515f09f709c44c37d55",
     "packages": [
         {
             "name": "brick/math",
@@ -797,6 +797,60 @@
                 "source": "https://github.com/thegreenter/xml/tree/v4.3.1"
             },
             "time": "2021-03-20T20:46:17+00:00"
+        },
+        {
+            "name": "greenter/xml-parser",
+            "version": "v4.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thegreenter/xml-parser.git",
+                "reference": "4bb7f17bf041d9acca48976881ee8a6a97c6a2b2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thegreenter/xml-parser/zipball/4bb7f17bf041d9acca48976881ee8a6a97c6a2b2",
+                "reference": "4bb7f17bf041d9acca48976881ee8a6a97c6a2b2",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "greenter/core": "^4.3.1",
+                "php": ">=7.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Greenter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Giancarlos Salas",
+                    "email": "giansalex@gmail.com"
+                }
+            ],
+            "description": "Greenter XML Parser",
+            "homepage": "https://greenter.dev/",
+            "keywords": [
+                "facturacion-electronica",
+                "greenter",
+                "sunat",
+                "xml"
+            ],
+            "support": {
+                "forum": "https://community.greenter.dev/",
+                "source": "https://github.com/thegreenter/xml-parser/tree/v4.3.1"
+            },
+            "time": "2021-03-20T20:46:23+00:00"
         },
         {
             "name": "greenter/xmldsig",
