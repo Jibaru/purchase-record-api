@@ -3,6 +3,7 @@
 namespace Core\Vouchers\Domain\Entities;
 
 use Carbon\Carbon;
+use Core\Vouchers\Application\Parser\Values\Invoice;
 use Core\Vouchers\Domain\Entities\ValueObjects\VoucherContent;
 use Core\Vouchers\Domain\Entities\ValueObjects\VoucherID;
 use Core\Vouchers\Domain\Entities\ValueObjects\VoucherType;
@@ -12,8 +13,8 @@ class Voucher
     public readonly VoucherID $id;
     private VoucherType $type;
     private VoucherContent $content;
-    private Carbon $createdAt;
-    private Carbon $updatedAt;
+    public readonly Carbon $createdAt;
+    public readonly Carbon $updatedAt;
 
     public function __construct(
         VoucherID $id,
@@ -38,5 +39,10 @@ class Voucher
             'created_at' => $this->createdAt->toDateTimeString(),
             'updated_at' => $this->updatedAt->toDateTimeString(),
         ];
+    }
+
+    public function parseContent(): Invoice
+    {
+        return Invoice::hydrate($this->content->value);
     }
 }
