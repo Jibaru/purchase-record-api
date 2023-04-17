@@ -33,4 +33,19 @@ class MemoryVoucherRepository implements VoucherRepository
 
         return $this->vouchers[$voucherID->value];
     }
+
+    /**
+     * @param int $page
+     * @param int|null $perPage
+     * @return Voucher[]
+     */
+    public function getVouchers(int $page, ?int $perPage = null): array
+    {
+        if (is_null($perPage)) {
+            return $this->vouchers;
+        }
+
+        $startIndex = ($page - 1) * $perPage;
+        return array_slice($this->vouchers, $startIndex, $perPage);
+    }
 }

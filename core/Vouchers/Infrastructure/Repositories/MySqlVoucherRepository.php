@@ -34,9 +34,52 @@ class MySqlVoucherRepository implements VoucherRepository
         return new Voucher(
             new VoucherID($voucher->id),
             new VoucherType($voucher->type),
-            new VoucherContent($voucher->content),
+            new VoucherContent(json_decode($voucher->content, true)),
             Carbon::parse($voucher->created_at),
             Carbon::parse($voucher->updated_at),
         );
+    }
+
+    /**
+     * @param int $page
+     * @param int|null $perPage
+     * @return Voucher[]
+     */
+    public function getVouchers(int $page, ?int $perPage = null): array
+    {
+        if (is_null($perPage)) {
+            return DB::table('vouchers')
+                ->get()
+                ->reduce(function (array &$vouchers, $voucher) {
+                    $vouchers[] = new Voucher(
+                        new VoucherID($voucher->id),
+                        new VoucherType($voucher->type),
+                        new VoucherContent(json_decode($voucher->content, true)),
+                        Carbon::parse($voucher->created_at),
+                        Carbon::parse($voucher->updated_at),
+                    );
+                }, []);
+
+        }
+
+        $vouchers = DB::table('vouchers')
+            ->paginate($perPage, '*', 'page', $page)
+            ->items();
+
+        if (empty($vouchers)) {
+            return [];
+        }
+
+        return collect($vouchers)->reduce(function (array &$vouchers, $voucher) {
+                $vouchers[] = new Voucher(
+                    new VoucherID($voucher->id),
+                    new VoucherType($voucher->type),
+                    new VoucherContent(json_decode($voucher->content, true)),
+                    Carbon::parse($voucher->created_at),
+                    Carbon::parse($voucher->updated_at),
+                );
+
+                return $vouchers;
+            }, []);
     }
 }

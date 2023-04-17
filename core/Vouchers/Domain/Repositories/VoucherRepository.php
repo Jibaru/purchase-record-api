@@ -16,4 +16,11 @@ interface VoucherRepository
      * @throws Exception
      */
     public function getByVoucherID(VoucherID $voucherID): Voucher;
+
+    /**
+     * @param int $page
+     * @param int|null $perPage
+     * @return Voucher[]
+     */
+    public function getVouchers(int $page, ?int $perPage = null): array;
 }
