@@ -23,11 +23,13 @@ class TaxTotal implements Arrayable
     public function __construct(
         Amount $taxAmount,
         ?Item $item,
-        ?Price $price
+        ?Price $price,
+        array $taxSubtotals
     ) {
         $this->taxAmount = $taxAmount;
         $this->item = $item;
         $this->price = $price;
+        $this->taxSubtotals = $taxSubtotals;
     }
 
     public static function hydrate(array|stdClass $from): self
@@ -45,6 +47,13 @@ class TaxTotal implements Arrayable
             $obj->price instanceof Price || is_null($obj->price)
                 ? $obj->price
                 : Price::hydrate($obj->price),
+            is_null($obj->taxSubtotals)
+                ? []
+                : collect($obj->taxSubtotals)->map(
+                    fn ($taxSubtotal) => $taxSubtotal instanceof TaxSubtotal
+                        ? $taxSubtotal
+                        : TaxSubtotal::hydrate($taxSubtotal)
+                )->toArray(),
         );
     }
 }

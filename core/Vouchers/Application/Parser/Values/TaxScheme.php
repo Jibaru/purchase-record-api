@@ -33,7 +33,7 @@ class TaxScheme implements Arrayable
         return new self(
             $obj->ID instanceof TaxSchemeID
                 ? $obj->ID
-                : TaxScheme::hydrate($obj->ID),
+                : TaxSchemeID::hydrate($obj->ID),
             $obj->name instanceof TaxSchemeName || is_null($obj->name)
                 ? $obj->name
                 : TaxSchemeName::hydrate($obj->name),

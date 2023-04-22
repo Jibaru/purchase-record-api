@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Core\Vouchers\Domain\Entities\ValueObjects\VoucherContent;
 use Core\Vouchers\Domain\Entities\ValueObjects\VoucherID;
 use Core\Vouchers\Domain\Entities\ValueObjects\VoucherType;
+use Core\Vouchers\Domain\Entities\ValueObjects\VoucherXMLContent;
 use Core\Vouchers\Domain\Entities\Voucher;
 use Core\Vouchers\Domain\Repositories\VoucherRepository;
 use Exception;
@@ -35,6 +36,7 @@ class MySqlVoucherRepository implements VoucherRepository
             new VoucherID($voucher->id),
             new VoucherType($voucher->type),
             new VoucherContent(json_decode($voucher->content, true)),
+            new VoucherXMLContent($voucher->xml_content),
             Carbon::parse($voucher->created_at),
             Carbon::parse($voucher->updated_at),
         );
@@ -49,20 +51,22 @@ class MySqlVoucherRepository implements VoucherRepository
     {
         if (is_null($perPage)) {
             return DB::table('vouchers')
+                ->orderByDesc('created_at')
                 ->get()
                 ->reduce(function (array &$vouchers, $voucher) {
                     $vouchers[] = new Voucher(
                         new VoucherID($voucher->id),
                         new VoucherType($voucher->type),
                         new VoucherContent(json_decode($voucher->content, true)),
+                        new VoucherXMLContent($voucher->xml_content),
                         Carbon::parse($voucher->created_at),
                         Carbon::parse($voucher->updated_at),
                     );
                 }, []);
-
         }
 
         $vouchers = DB::table('vouchers')
+            ->orderByDesc('created_at')
             ->paginate($perPage, '*', 'page', $page)
             ->items();
 
@@ -75,11 +79,12 @@ class MySqlVoucherRepository implements VoucherRepository
                     new VoucherID($voucher->id),
                     new VoucherType($voucher->type),
                     new VoucherContent(json_decode($voucher->content, true)),
+                    new VoucherXMLContent($voucher->xml_content),
                     Carbon::parse($voucher->created_at),
                     Carbon::parse($voucher->updated_at),
                 );
 
                 return $vouchers;
-            }, []);
+        }, []);
     }
 }

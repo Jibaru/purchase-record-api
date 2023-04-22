@@ -11,14 +11,14 @@ class TaxCategory implements Arrayable
 {
     use IsArrayable;
 
-    public readonly TaxScheme $taxScheme;
+    public readonly ?TaxScheme $taxScheme;
     public readonly ?TaxCategoryID $ID;
     public readonly ?Percent $percent;
     public readonly ?TierRange $tierRange;
     public readonly ?TaxExemptionReasonCode $taxExemptionReasonCode;
 
     public function __construct(
-        TaxScheme $taxScheme,
+        ?TaxScheme $taxScheme,
         ?TaxCategoryID $ID,
         ?Percent $percent,
         ?TierRange $tierRange,
@@ -37,7 +37,7 @@ class TaxCategory implements Arrayable
         Filler::withNull($obj, self::class);
 
         return new self(
-            $obj->taxScheme instanceof TaxScheme
+            $obj->taxScheme instanceof TaxScheme || is_null($obj->taxScheme)
                 ? $obj->taxScheme
                 : TaxScheme::hydrate($obj->taxScheme),
             $obj->ID instanceof TaxCategoryID || is_null($obj->ID)
