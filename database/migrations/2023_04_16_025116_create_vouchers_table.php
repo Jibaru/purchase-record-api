@@ -17,6 +17,7 @@ return new class extends Migration
                 $table->uuid('id')->primary();
                 $table->string('type', '30');
                 $table->json('content');
+                $table->longText('xml_content');
                 $table->timestamps();
             }
         );
