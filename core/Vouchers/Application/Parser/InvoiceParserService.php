@@ -828,11 +828,14 @@ class InvoiceParserService implements Parser
                                 'value' => (string) $line->xpath('cac:Item/cbc:Description')[0],
                                 ]
                             ),
-                            'sellersItemIdentification' => SellersItemIdentification::hydrate(
-                                [
-                                'ID' => new ID((string) $line->xpath('cac:Item/cac:SellersItemIdentification/cbc:ID')[0]),
-                                ]
-                            )
+                            'sellersItemIdentification' =>
+                                !empty($line->xpath('cac:Item/cac:SellersItemIdentification'))
+                                    ? SellersItemIdentification::hydrate(
+                                        [
+                                        'ID' => new ID((string) $line->xpath('cac:Item/cac:SellersItemIdentification/cbc:ID')[0]),
+                                        ]
+                                    )
+                                    : null
                             ]
                         ),
                         'price' => Price::hydrate(
