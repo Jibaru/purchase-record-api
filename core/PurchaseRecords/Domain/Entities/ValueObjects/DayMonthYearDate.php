@@ -33,7 +33,7 @@ class DayMonthYearDate
             throw new Exception('the value does not match with YYYY-MM-DD: ' . $dayMonthYear);
         }
 
-        [$day, $month, $year] = explode('-', $dayMonthYear);
+        [$year, $month, $day] = explode('-', $dayMonthYear);
 
         return new self(
             (int) $day,
@@ -54,8 +54,8 @@ class DayMonthYearDate
 
     public function toPurchaseRecordFormat(): string
     {
-        return str_pad($this->day, 2, 0) . '/' .
-            str_pad($this->month, 2, 0) . '/' .
+        return str_pad($this->day, 2, 0, STR_PAD_LEFT) . '/' .
+            str_pad($this->month, 2, 0, STR_PAD_LEFT) . '/' .
             $this->year;
     }
 }
