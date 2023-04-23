@@ -23,4 +23,6 @@ interface VoucherRepository
      * @return Voucher[]
      */
     public function getVouchers(int $page, ?int $perPage = null): array;
+
+    public function getTotalPages(int $perPage): int;
 }

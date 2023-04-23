@@ -20,12 +20,17 @@ class GetPurchaseRecordsHandler
     public function __invoke(Request $request): Response
     {
         $purchaseRecordDTOS = $this->purchaseRecordRepository->getPurchaseRecordsRows(
-            $request->input('page'),
-            $request->input('paginate'),
+            $request->input('page', 1),
+            $request->input('paginate', 15),
         );
+
+        $totalPages = $this->purchaseRecordRepository->getTotalPages($request->input('paginate', 15));
 
         return response([
             'data' => PurchaseRecordDtoResource::collection($purchaseRecordDTOS),
+            'page' => $request->input('page', 1),
+            'paginate' => $request->input('paginate', 15),
+            'total_pages' => $totalPages,
         ], 200);
     }
 }

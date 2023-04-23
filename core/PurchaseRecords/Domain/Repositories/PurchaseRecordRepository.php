@@ -9,4 +9,6 @@ interface PurchaseRecordRepository
     public function store(PurchaseRecord $purchaseRecord): void;
 
     public function getPurchaseRecordsRows(int $page, ?int $perPage = null): array;
+
+    public function getTotalPages(int $perPage): int;
 }

@@ -41,4 +41,10 @@ class MySqlPurchaseRecordRepository implements PurchaseRecordRepository
             return $purchaseRecords;
         }, []);
     }
+
+    public function getTotalPages(int $perPage): int
+    {
+        $total = DB::table('purchase_records')->count('id');
+        return ceil($total / $perPage);
+    }
 }

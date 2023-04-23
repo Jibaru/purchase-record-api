@@ -87,4 +87,10 @@ class MySqlVoucherRepository implements VoucherRepository
                 return $vouchers;
         }, []);
     }
+
+    public function getTotalPages(int $perPage): int
+    {
+        $total = DB::table('vouchers')->count('id');
+        return ceil($total / $perPage);
+    }
 }

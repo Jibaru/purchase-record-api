@@ -48,4 +48,10 @@ class MemoryVoucherRepository implements VoucherRepository
         $startIndex = ($page - 1) * $perPage;
         return array_slice($this->vouchers, $startIndex, $perPage);
     }
+
+    public function getTotalPages(int $perPage): int
+    {
+        $total = count($this->vouchers);
+        return ceil($total / $perPage);
+    }
 }
