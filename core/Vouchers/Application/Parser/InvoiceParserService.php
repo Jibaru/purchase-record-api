@@ -33,6 +33,7 @@ use Core\Vouchers\Application\Parser\Values\LegalMonetaryTotal;
 use Core\Vouchers\Application\Parser\Values\Note;
 use Core\Vouchers\Application\Parser\Values\PartyIdentificationID;
 use Core\Vouchers\Application\Parser\Values\PartyLegalEntity;
+use Core\Vouchers\Application\Parser\Values\PaymentPercent;
 use Core\Vouchers\Application\Parser\Values\PaymentTerm;
 use Core\Vouchers\Application\Parser\Values\Percent;
 use Core\Vouchers\Application\Parser\Values\Price;
@@ -493,7 +494,14 @@ class InvoiceParserService implements Parser
                             ]
                         )
                         : null,
-                    ]
+                    'paymentPercent' => !empty($data->xpath('cbc:PaymentPercent'))
+                        ? PaymentPercent::hydrate(
+                            [
+                                'value' => (float) $data->xpath('cbc:PaymentPercent')[0],
+                            ]
+                        )
+                        : null
+                    ],
                 );
             }
         }

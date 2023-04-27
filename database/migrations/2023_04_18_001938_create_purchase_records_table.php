@@ -55,6 +55,12 @@ return new class extends Migration
             $table->string('error_type_four', 4)->nullable(); // 40
             $table->string('vouchers_canceled_with_payment_methods', 1)->nullable(); // 41 comprobantes_de_pago_cancelados_con_medios_de_pago
             $table->string('state', 1)->nullable(); // 42
+            $table->decimal('payable_amount', 14, 2);
+            $table->boolean('has_detraction')->default(false);
+            $table->decimal('detraction_percentage', 5, 2)->nullable();
+            $table->boolean('has_retention')->default(false);
+            $table->decimal('retention_percentage', 14, 2)->nullable();
+            $table->string('payment_mean_account', 100)->nullable();
             $table->uuid('voucher_id')->unique();
             $table->foreign('voucher_id')
                 ->on('vouchers')

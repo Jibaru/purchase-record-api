@@ -38,6 +38,9 @@ class PurchaseRecordDtoResource extends JsonResource
             'second_igv_amount' => $this->resource->secondIgvAmount,
             'third_tax_base' => $this->resource->thirdTaxBase,
             'third_igv_amount' => $this->resource->thirdIgvAmount,
+            'payable_amount' => $this->resource->payableAmount,
+            'has_detraction' => $this->resource->hasDetraction,
+            'detraction_percentage' => $this->resource->detractionPercentage,
         ];
     }
 }

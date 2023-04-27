@@ -7,10 +7,12 @@ use Core\PurchaseRecords\Domain\Entities\PurchaseRecord;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\CorrelativeAccountingEntryNumber;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\DailyOperationsTotalAmount;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\DayMonthYearDate;
+use Core\PurchaseRecords\Domain\Entities\ValueObjects\Detraction;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\DuaOrDsiIssueYear;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\IgvAmount;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\Period;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\PurchaseRecordID;
+use Core\PurchaseRecords\Domain\Entities\ValueObjects\SummaryAmount;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\SupplierDocumentDenomination;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\SupplierDocumentNumber;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\SupplierDocumentType;
@@ -82,6 +84,9 @@ class CreatePurchaseRecord
             'error_type_four' => null,
             'vouchers_canceled_with_payment_methods' => null,
             'state' => null,
+            'payable_amount' => false,
+            'has_detraction' => false,
+            'detraction_percentage' => null,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];
@@ -98,6 +103,8 @@ class CreatePurchaseRecord
         $this->register10($invoice, $fields);
         $this->register11and12and13($invoice, $fields);
         $this->register14To19($invoice, $fields);
+        $this->registerPayableAmount($invoice, $fields);
+        $this->registerDetraction($invoice, $fields);
 
         $repository = app(PurchaseRecordRepository::class);
         $repository->store(PurchaseRecord::hydrate($fields));
@@ -343,6 +350,41 @@ class CreatePurchaseRecord
             if ($taxSubtotal->taxCategory->taxScheme->name->value == 'INAFECTO') {
                 $fields['third_tax_base'] = TaxBase::make($taxSubtotal->taxableAmount->value);
                 $fields['third_igv_amount'] = IgvAmount::make($taxSubtotal->taxAmount->value);
+            }
+        }
+    }
+
+    public function registerPayableAmount(Invoice $invoice, array &$fields): void
+    {
+        $fields['payable_amount'] = SummaryAmount::make($invoice->legalMonetaryTotal->payableAmount->value);
+    }
+
+    public function registerDetraction(Invoice $invoice, array &$fields): void
+    {
+        $MIN_VALUE_TO_HAS_DETRACTION = 700;
+        $total = $invoice->legalMonetaryTotal->payableAmount->value;
+
+        $hasDetractionInNotes = false;
+
+        if (isset($invoice->notes)) {
+            foreach ($invoice->notes as $note) {
+                if (
+                    str_contains(strtolower($note->value), 'detraccion') ||
+                    str_contains(strtolower($note->value), 'detracción')
+                ) {
+                    $hasDetractionInNotes = true;
+                }
+            }
+
+            if ($total > $MIN_VALUE_TO_HAS_DETRACTION && $hasDetractionInNotes) {
+                $fields['has_detraction'] = true;
+                foreach ($invoice->paymentTerms as $paymentTerm) {
+                    if (strtolower($paymentTerm->ID->value) == 'detraccion') {
+                        if (isset($paymentTerm->paymentPercent)) {
+                            $fields['detraction_percentage'] = new Detraction($paymentTerm->paymentPercent->value);
+                        }
+                    }
+                }
             }
         }
     }

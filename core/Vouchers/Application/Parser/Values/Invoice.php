@@ -43,6 +43,11 @@ class Invoice implements Arrayable
     public readonly array $paymentTerms;
 
     /**
+     * @var PaymentMean[]
+     */
+    public readonly array $paymentMeans;
+
+    /**
      * @var InvoiceLine[]
      */
     public readonly array $invoiceLines;
@@ -62,6 +67,7 @@ class Invoice implements Arrayable
         LegalMonetaryTotal $legalMonetaryTotal,
         array $notes,
         array $additionalDocumentReferences,
+        array $paymentMeans,
         array $paymentTerms,
         array $invoiceLines,
         ?Date $dueDate
@@ -80,6 +86,7 @@ class Invoice implements Arrayable
         $this->legalMonetaryTotal = $legalMonetaryTotal;
         $this->notes = $notes;
         $this->additionalDocumentReferences = $additionalDocumentReferences;
+        $this->paymentMeans = $paymentMeans;
         $this->paymentTerms = $paymentTerms;
         $this->invoiceLines = $invoiceLines;
         $this->dueDate = $dueDate;
@@ -127,10 +134,41 @@ class Invoice implements Arrayable
             $obj->legalMonetaryTotal instanceof LegalMonetaryTotal
                 ? $obj->legalMonetaryTotal
                 : LegalMonetaryTotal::hydrate($obj->legalMonetaryTotal),
-            $obj->notes,
-            $obj->additionalDocumentReferences,
-            $obj->paymentTerms,
-            $obj->invoiceLines,
+            collect($obj->notes)->map(function ($note) {
+                if ($note instanceof Note) {
+                    return $note;
+                }
+
+                return Note::hydrate($note);
+            })->toArray(),
+            collect($obj->additionalDocumentReferences)->map(function ($additionalDocumentReference) {
+                if ($additionalDocumentReference instanceof AdditionalDocumentReference) {
+                    return $additionalDocumentReference;
+                }
+
+                return AdditionalDocumentReference::hydrate($additionalDocumentReference);
+            })->toArray(),
+            collect($obj->paymentMeans)->map(function ($mean) {
+                if ($mean instanceof PaymentMean) {
+                    return $mean;
+                }
+
+                return PaymentMean::hydrate($mean);
+            })->toArray(),
+            collect($obj->paymentTerms)->map(function ($paymentTerm) {
+                if ($paymentTerm instanceof PaymentTerm) {
+                    return $paymentTerm;
+                }
+
+                return PaymentTerm::hydrate($paymentTerm);
+            })->toArray(),
+            collect($obj->invoiceLines)->map(function ($invoiceLine) {
+                if ($invoiceLine instanceof InvoiceLine) {
+                    return $invoiceLine;
+                }
+
+                return InvoiceLine::hydrate($invoiceLine);
+            })->toArray(),
             $obj->dueDate instanceof Date || is_null($obj->dueDate)
                 ? $obj->dueDate
                 : Date::hydrate($obj->dueDate),

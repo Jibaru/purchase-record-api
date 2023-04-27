@@ -14,15 +14,18 @@ class PaymentTerm implements Arrayable
     public readonly ID $ID;
     public readonly ID $paymentMeansID;
     public readonly ?Amount $amount;
+    public readonly ?PaymentPercent $paymentPercent;
 
     public function __construct(
         ID $ID,
         ID $paymentMeansID,
-        ?Amount $amount
+        ?Amount $amount,
+        ?PaymentPercent $paymentPercent
     ) {
         $this->ID = $ID;
         $this->paymentMeansID = $paymentMeansID;
         $this->amount = $amount;
+        $this->paymentPercent = $paymentPercent;
     }
 
     public static function hydrate(array|stdClass $from): self
@@ -40,6 +43,9 @@ class PaymentTerm implements Arrayable
             $obj->amount instanceof Amount || is_null($obj->amount)
                 ? $obj->amount
                 : Amount::hydrate($obj->amount),
+            $obj->paymentPercent instanceof PaymentPercent || is_null($obj->paymentPercent)
+                ? $obj->paymentPercent
+                : PaymentPercent::hydrate($obj->paymentPercent),
         );
     }
 }

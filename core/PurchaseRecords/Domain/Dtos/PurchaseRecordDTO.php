@@ -26,6 +26,9 @@ class PurchaseRecordDTO
     public readonly ?float $secondIgvAmount;
     public readonly ?float $thirdTaxBase;
     public readonly ?float $thirdIgvAmount;
+    public readonly float $payableAmount;
+    public readonly bool $hasDetraction;
+    public readonly ?float $detractionPercentage;
 
     /**
      * @param string $id
@@ -48,6 +51,9 @@ class PurchaseRecordDTO
      * @param float|null $secondIgvAmount
      * @param float|null $thirdTaxBase
      * @param float|null $thirdIgvAmount
+     * @param float $payableAmount
+     * @param bool $hasDetraction
+     * @param float|null $detractionPercentage
      */
     public function __construct(
         string $id,
@@ -69,7 +75,10 @@ class PurchaseRecordDTO
         ?float $secondTaxBase,
         ?float $secondIgvAmount,
         ?float $thirdTaxBase,
-        ?float $thirdIgvAmount
+        ?float $thirdIgvAmount,
+        float $payableAmount,
+        bool $hasDetraction,
+        ?float $detractionPercentage,
     ) {
         $this->id = $id;
         $this->period = $period;
@@ -91,6 +100,9 @@ class PurchaseRecordDTO
         $this->secondIgvAmount = $secondIgvAmount;
         $this->thirdTaxBase = $thirdTaxBase;
         $this->thirdIgvAmount = $thirdIgvAmount;
+        $this->payableAmount = $payableAmount;
+        $this->hasDetraction = $hasDetraction;
+        $this->detractionPercentage = $detractionPercentage;
     }
 
     public static function hydrate(array|stdClass $fields): self
@@ -118,6 +130,9 @@ class PurchaseRecordDTO
             $fields->second_igv_amount,
             $fields->third_tax_base,
             $fields->third_igv_amount,
+            $fields->payable_amount,
+            $fields->has_detraction,
+            $fields->detraction_percentage,
         );
     }
 }

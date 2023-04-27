@@ -66,8 +66,20 @@ class InvoiceLine implements Arrayable
             $obj->freeOfChargeIndicator instanceof FreeOfChargeIndicator || is_null($obj->freeOfChargeIndicator)
                 ? $obj->freeOfChargeIndicator
                 : FreeOfChargeIndicator::hydrate($obj->freeOfChargeIndicator),
-            $obj->pricingReferences,
-            $obj->allowanceCharges
+            collect($obj->pricingReferences)->map(function ($pricingReference) {
+                if ($pricingReference instanceof PricingReference) {
+                    return $pricingReference;
+                }
+
+                return PricingReference::hydrate($pricingReference);
+            })->toArray(),
+            collect($obj->allowanceCharges)->map(function ($allowanceCharge) {
+                if ($allowanceCharge instanceof AllowanceCharge) {
+                    return $allowanceCharge;
+                }
+
+                return AllowanceCharge::hydrate($allowanceCharge);
+            })->toArray(),
         );
     }
 }

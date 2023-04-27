@@ -6,10 +6,12 @@ use Carbon\Carbon;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\CorrelativeAccountingEntryNumber;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\DailyOperationsTotalAmount;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\DayMonthYearDate;
+use Core\PurchaseRecords\Domain\Entities\ValueObjects\Detraction;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\DuaOrDsiIssueYear;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\IgvAmount;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\Period;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\PurchaseRecordID;
+use Core\PurchaseRecords\Domain\Entities\ValueObjects\SummaryAmount;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\SupplierDocumentDenomination;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\SupplierDocumentNumber;
 use Core\PurchaseRecords\Domain\Entities\ValueObjects\SupplierDocumentType;
@@ -66,6 +68,11 @@ class PurchaseRecord
     private ?string $error_type_four;
     private ?string $vouchers_canceled_with_payment_methods;
     private ?string $state;*/
+
+    private SummaryAmount $payableAmount;
+    private bool $hasDetraction;
+    private ?Detraction $detractionPercentage;
+
     private VoucherID $voucherID;
     private Carbon $createdAt;
     private Carbon $updatedAt;
@@ -92,6 +99,9 @@ class PurchaseRecord
         ?IgvAmount $secondIgvAmount,
         ?TaxBase $thirdTaxBase,
         ?IgvAmount $thirdIgvAmount,
+        SummaryAmount $payableAmount,
+        bool $hasDetraction,
+        ?Detraction $detractionPercentage,
         Carbon $createdAt,
         Carbon $updatedAt
     ) {
@@ -116,6 +126,9 @@ class PurchaseRecord
         $this->secondIgvAmount = $secondIgvAmount;
         $this->thirdTaxBase = $thirdTaxBase;
         $this->thirdIgvAmount = $thirdIgvAmount;
+        $this->payableAmount = $payableAmount;
+        $this->hasDetraction = $hasDetraction;
+        $this->detractionPercentage = $detractionPercentage;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
     }
@@ -144,6 +157,9 @@ class PurchaseRecord
             $fields['second_igv_amount'],
             $fields['third_tax_base'],
             $fields['third_igv_amount'],
+            $fields['payable_amount'],
+            $fields['has_detraction'],
+            $fields['detraction_percentage'],
             $fields['created_at'],
             $fields['updated_at'],
         );
@@ -173,6 +189,9 @@ class PurchaseRecord
             'second_igv_amount' => $this->secondIgvAmount?->value,
             'third_tax_base' => $this->thirdTaxBase?->value,
             'third_igv_amount' => $this->thirdIgvAmount?->value,
+            'payable_amount' => $this->payableAmount->value,
+            'has_detraction' => $this->hasDetraction,
+            'detraction_percentage' => $this->detractionPercentage?->percentage,
             'created_at' => $this->createdAt->toDateTimeString(),
             'updated_at' => $this->updatedAt->toDateTimeString(),
         ];
