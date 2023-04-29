@@ -829,35 +829,35 @@ class InvoiceParserService implements Parser
                                 }
                             )
                             ->toArray(),
-                        'item' => Item::hydrate(
-                            [
+                        ]
+                    ),
+                    'item' => Item::hydrate(
+                        [
                             'description' => Description::hydrate(
                                 [
-                                'value' => (string) $line->xpath('cac:Item/cbc:Description')[0],
+                                    'value' => (string) $line->xpath('cac:Item/cbc:Description')[0],
                                 ]
                             ),
                             'sellersItemIdentification' =>
                                 !empty($line->xpath('cac:Item/cac:SellersItemIdentification'))
                                     ? SellersItemIdentification::hydrate(
-                                        [
+                                    [
                                         'ID' => new ID((string) $line->xpath('cac:Item/cac:SellersItemIdentification/cbc:ID')[0]),
-                                        ]
-                                    )
+                                    ]
+                                )
                                     : null
-                            ]
-                        ),
-                        'price' => Price::hydrate(
-                            [
+                        ]
+                    ),
+                    'price' => Price::hydrate(
+                        [
                             'priceAmount' => Amount::hydrate(
                                 [
-                                'value' => (float) $line->xpath('cac:Price/cbc:PriceAmount')[0],
-                                'currencyID' => (string) $line->xpath('cac:Price/cbc:PriceAmount')[0]->attributes()->currencyID,
+                                    'value' => (float) $line->xpath('cac:Price/cbc:PriceAmount')[0],
+                                    'currencyID' => (string) $line->xpath('cac:Price/cbc:PriceAmount')[0]->attributes()->currencyID,
                                 ]
                             ),
-                            ]
-                        ),
                         ]
-                    )
+                    ),
                     ]
                 );
             }
