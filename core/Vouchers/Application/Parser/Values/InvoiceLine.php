@@ -15,6 +15,7 @@ class InvoiceLine implements Arrayable
     public readonly InvoicedQuantity $invoicedQuantity;
     public readonly Amount $lineExtensionAmount;
     public readonly TaxTotal $taxTotal;
+    public readonly ?Item $item;
     public readonly ?FreeOfChargeIndicator $freeOfChargeIndicator;
 
     /**
@@ -32,6 +33,7 @@ class InvoiceLine implements Arrayable
         InvoicedQuantity $invoicedQuantity,
         Amount $lineExtensionAmount,
         TaxTotal $taxTotal,
+        ?Item $item,
         ?FreeOfChargeIndicator $freeOfChargeIndicator,
         array $pricingReferences,
         array $allowanceCharges
@@ -40,6 +42,7 @@ class InvoiceLine implements Arrayable
         $this->invoicedQuantity = $invoicedQuantity;
         $this->lineExtensionAmount = $lineExtensionAmount;
         $this->taxTotal = $taxTotal;
+        $this->item = $item;
         $this->freeOfChargeIndicator = $freeOfChargeIndicator;
         $this->pricingReferences = $pricingReferences;
         $this->allowanceCharges = $allowanceCharges;
@@ -63,6 +66,9 @@ class InvoiceLine implements Arrayable
             $obj->taxTotal instanceof TaxTotal
                 ? $obj->taxTotal
                 : TaxTotal::hydrate($obj->taxTotal),
+            $obj->item instanceof Item || is_null($obj->item)
+                ? $obj->item
+                : Item::hydrate($obj->item),
             $obj->freeOfChargeIndicator instanceof FreeOfChargeIndicator || is_null($obj->freeOfChargeIndicator)
                 ? $obj->freeOfChargeIndicator
                 : FreeOfChargeIndicator::hydrate($obj->freeOfChargeIndicator),
