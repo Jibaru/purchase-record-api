@@ -50,8 +50,9 @@ class DetailedVoucherResource extends JsonResource
                 return [
                     'quantity' => $line->invoicedQuantity->value,
                     'unit' => $line->invoicedQuantity->unitCode,
-                    'unit_value' => $line->lineExtensionAmount->value,
-                    'description' => $line?->item?->description->value,
+                    'unit_value' => $line?->price?->priceAmount?->value,
+                    'total' => $line->lineExtensionAmount->value,
+                    'description' => $line?->item?->description?->value,
                 ];
             })->toArray(),
             'summary' => [
