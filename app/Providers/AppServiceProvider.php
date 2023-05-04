@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use Core\Auth\Domain\Repositories\UserRepository;
+use Core\Auth\Infrastructure\Repositories\MySqlUserRepository;
 use Core\PurchaseRecords\Domain\Repositories\PurchaseRecordRepository;
 use Core\PurchaseRecords\Infrastructure\Repositories\MySqlPurchaseRecordRepository;
 use Core\Vouchers\Domain\Repositories\VoucherRepository;
@@ -17,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(VoucherRepository::class, MySqlVoucherRepository::class);
         $this->app->bind(PurchaseRecordRepository::class, MySqlPurchaseRecordRepository::class);
+        $this->app->bind(UserRepository::class, MySqlUserRepository::class);
     }
 
     /**
