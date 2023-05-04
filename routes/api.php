@@ -1,7 +1,6 @@
 <?php
 
-use App\Http\Controllers\Vouchers\Invoices\StoreInvoiceHandler;
-use Illuminate\Http\Request;
+use Core\Shared\Infrastructure\Middlewares\Authenticated;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,11 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get(
-    '/user',
-    function (Request $request) {
-        return $request->user();
+Route::middleware(Authenticated::class)->group(
+    function () {
+        require_once 'api/auth.php';
     }
 );
 
-require_once 'api/auth.php';
+require_once 'api/no-auth.php';
