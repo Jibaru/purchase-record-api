@@ -47,4 +47,17 @@ class Handler extends ExceptionHandler
             }
         );
     }
+
+    public function render(
+        $request,
+        Throwable $e
+    ): \Illuminate\Foundation\Application|\Illuminate\Http\Response|\Illuminate\Http\JsonResponse|\Illuminate\Contracts\Foundation\Application|\Symfony\Component\HttpFoundation\Response|\Illuminate\Contracts\Routing\ResponseFactory {
+        if ($e instanceof \Exception) {
+            return response([
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+
+        return parent::render($request, $e);
+    }
 }
