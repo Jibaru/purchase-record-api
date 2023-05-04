@@ -5,8 +5,9 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "ext-simplexml": "*",
         "php": "^8.1",
+        "ext-simplexml": "*",
+        "firebase/php-jwt": "^6.4",
         "greenter/lite": "^4.3",
         "greenter/xml-parser": "^4.3",
         "guzzlehttp/guzzle": "^7.2",

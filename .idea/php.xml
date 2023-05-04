@@ -139,6 +139,7 @@
       <path value="$PROJECT_DIR$/vendor/data/invoicing" />
       <path value="$PROJECT_DIR$/vendor/data/#innodb_temp" />
       <path value="$PROJECT_DIR$/vendor/data/performance_schema" />
+      <path value="$PROJECT_DIR$/vendor/firebase/php-jwt" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />
