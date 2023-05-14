@@ -25,4 +25,6 @@ interface UserRepository
      */
     public function getByUserEmail(UserEmail $userEmail): User;
     public function existsUserByEmail(UserEmail $userEmail): bool;
+    public function getUsers(int $page, ?int $perPage = null): array;
+    public function getTotalPages(int $perPage): int;
 }
