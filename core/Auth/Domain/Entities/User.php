@@ -16,6 +16,10 @@ class User
     private UserName $name;
     private UserEmail $email;
     private UserPassword $password;
+    /**
+     * @var Permission[]
+     */
+    private array $permissions;
     private Carbon $createdAt;
     private Carbon $updatedAt;
 
@@ -25,7 +29,8 @@ class User
         UserEmail $email,
         UserPassword $password,
         Carbon $createdAt,
-        Carbon $updatedAt
+        Carbon $updatedAt,
+        array $permissions = []
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -33,6 +38,7 @@ class User
         $this->password = $password;
         $this->createdAt = $createdAt;
         $this->updatedAt = $updatedAt;
+        $this->permissions = $permissions;
     }
 
     public function toArray(): array
@@ -42,9 +48,19 @@ class User
             'name' => $this->name->value,
             'email' => $this->email->value,
             'password' => $this->password->hashedValue,
+            'permissions' => collect($this->permissions)
+                ->map(fn (Permission $permission) => $permission->toArray())
+                ->toArray(),
             'created_at' => $this->createdAt->toDateTimeString(),
             'updated_at' => $this->updatedAt->toDateTimeString(),
         ];
+    }
+
+    public function permissionsToArray(): array
+    {
+        return collect($this->permissions)
+            ->map(fn (Permission $permission) => $permission->toArray())
+            ->toArray();
     }
 
     /**
@@ -63,5 +79,16 @@ class User
             $this->id->value,
             Carbon::now(),
         );
+    }
+
+    public function hasPermission(Permission $permission): bool
+    {
+        foreach ($this->permissions as $index => $aPermission) {
+            if ($aPermission->equals($permission)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
