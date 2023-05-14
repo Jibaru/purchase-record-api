@@ -58,4 +58,13 @@ class UserToken
     {
         return $this->subject;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'subject' => $this->subject,
+            'name' => $this->name,
+            'token' => $this->toJWT(),
+        ];
+    }
 }
