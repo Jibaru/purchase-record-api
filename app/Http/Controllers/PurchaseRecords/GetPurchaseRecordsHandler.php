@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\PurchaseRecords;
 
 use Core\PurchaseRecords\Infrastructure\GetPurchaseRecordsHandler as InfrastructureGetPurchaseRecordsHandler;
-use Illuminate\Http\Request;
+use Core\PurchaseRecords\Infrastructure\Requests\GetPurchaseRecordsRequest;
 use Illuminate\Http\Response;
 
 class GetPurchaseRecordsHandler
@@ -15,7 +15,7 @@ class GetPurchaseRecordsHandler
         $this->getPurchaseRecordsHandler = $getPurchaseRecordsHandler;
     }
 
-    public function __invoke(Request $request): Response
+    public function __invoke(GetPurchaseRecordsRequest $request): Response
     {
         return $this->getPurchaseRecordsHandler->__invoke($request);
     }
