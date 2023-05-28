@@ -5,6 +5,9 @@ namespace Core\PurchaseRecords\Infrastructure\Repositories;
 use Core\PurchaseRecords\Domain\Dtos\PurchaseRecordDTO;
 use Core\PurchaseRecords\Domain\Entities\PurchaseRecord;
 use Core\PurchaseRecords\Domain\Repositories\PurchaseRecordRepository;
+use Core\PurchaseRecords\Domain\Repositories\Specifications\PeriodSpecification;
+use Core\PurchaseRecords\Domain\Repositories\Specifications\Specification;
+use Core\PurchaseRecords\Infrastructure\Repositories\Facades\MySqlPeriodSpecificationFacade;
 use Illuminate\Support\Facades\DB;
 
 class MySqlPurchaseRecordRepository implements PurchaseRecordRepository
@@ -15,11 +18,18 @@ class MySqlPurchaseRecordRepository implements PurchaseRecordRepository
             ->insert($purchaseRecord->toArray());
     }
 
-    public function getPurchaseRecordsRows(int $page, ?int $perPage = null): array
+    public function getPurchaseRecordsRows(int $page, ?int $perPage = null, ?Specification $specification = null): array
     {
+        $builder = DB::table('purchase_records')
+            ->orderByDesc('created_at');
+
+        if ($specification instanceof PeriodSpecification) {
+            [$field, $op, $value] = (new MySqlPeriodSpecificationFacade($specification))->toMySqlCondition();
+            $builder->where($field, $op, $value);
+        }
+
         if (is_null($perPage)) {
-            return DB::table('purchase_records')
-                ->orderByDesc('created_at')
+            return $builder
                 ->get()
                 ->reduce(function (array &$purchaseRecords, $record) {
                     $purchaseRecords[] = PurchaseRecordDTO::hydrate($record);
@@ -27,8 +37,7 @@ class MySqlPurchaseRecordRepository implements PurchaseRecordRepository
                 }, []);
         }
 
-        $purchaseRecords = DB::table('purchase_records')
-            ->orderByDesc('created_at')
+        $purchaseRecords = $builder
             ->paginate($perPage, '*', 'page', $page)
             ->items();
 
@@ -42,9 +51,16 @@ class MySqlPurchaseRecordRepository implements PurchaseRecordRepository
         }, []);
     }
 
-    public function getTotalPages(int $perPage): int
+    public function getTotalPages(int $perPage, ?Specification $specification = null): int
     {
-        $total = DB::table('purchase_records')->count('id');
+        $builder = DB::table('purchase_records');
+
+        if ($specification instanceof PeriodSpecification) {
+            [$field, $op, $value] = (new MySqlPeriodSpecificationFacade($specification))->toMySqlCondition();
+            $builder->where($field, $op, $value);
+        }
+
+        $total = $builder->count('id');
         return ceil($total / $perPage);
     }
 }
