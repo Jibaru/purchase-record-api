@@ -2,16 +2,13 @@
 
 namespace Core\Vouchers\Infrastructure;
 
-use App\Http\Controllers\Controller;
-use Core\Vouchers\Application\Parser\InvoiceParserService;
-use Core\Vouchers\Application\Parser\Values\Invoice;
 use Core\Vouchers\Application\StoreInvoiceUseCase;
-use Core\Vouchers\Domain\Entities\Factories\VoucherFactory;
 use Core\Vouchers\Infrastructure\Resources\VoucherResource;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class StoreInvoiceHandler extends Controller
+class StoreInvoiceHandler
 {
     private StoreInvoiceUseCase $storeInvoiceUseCase;
 
@@ -26,9 +23,18 @@ class StoreInvoiceHandler extends Controller
 
         $vouchers = [];
 
-        foreach ($files as $file) {
-            $xmlContents = file_get_contents($file);
-            $vouchers[] = $this->storeInvoiceUseCase->__invoke($xmlContents);
+        try {
+            foreach ($files as $file) {
+                $xmlContents = file_get_contents($file);
+                $vouchers[] = $this->storeInvoiceUseCase->__invoke($xmlContents);
+            }
+        } catch (Exception $exception) {
+            return response(
+                [
+                    'message' => $exception->getMessage(),
+                ],
+                400
+            );
         }
 
         return response(

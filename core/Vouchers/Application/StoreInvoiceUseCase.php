@@ -8,6 +8,7 @@ use Core\Vouchers\Application\Parser\Factories\ParserFactory;
 use Core\Vouchers\Domain\Entities\Factories\VoucherFactory;
 use Core\Vouchers\Domain\Entities\Voucher;
 use Core\Vouchers\Domain\Repositories\VoucherRepository;
+use Exception;
 
 class StoreInvoiceUseCase
 {
@@ -28,6 +29,11 @@ class StoreInvoiceUseCase
         $this->eventBus = $eventBus;
     }
 
+    /**
+     * @param string $xmlContents
+     * @return Voucher
+     * @throws Exception
+     */
     public function __invoke(
         string $xmlContents
     ): Voucher {

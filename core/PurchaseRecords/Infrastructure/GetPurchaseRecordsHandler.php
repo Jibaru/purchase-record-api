@@ -2,34 +2,41 @@
 
 namespace Core\PurchaseRecords\Infrastructure;
 
-use Core\PurchaseRecords\Domain\Repositories\PurchaseRecordRepository;
+use Core\PurchaseRecords\Application\UseCases\GetPurchaseRecordsUseCase;
+use Core\PurchaseRecords\Domain\Entities\ValueObjects\Period;
+use Core\PurchaseRecords\Infrastructure\Requests\GetPurchaseRecordsRequest;
 use Core\PurchaseRecords\Infrastructure\Resources\PurchaseRecordDtoResource;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class GetPurchaseRecordsHandler
 {
-    private PurchaseRecordRepository $purchaseRecordRepository;
+    private GetPurchaseRecordsUseCase $getPurchaseRecordsUseCase;
 
     public function __construct(
-        PurchaseRecordRepository $purchaseRecordRepository
+        GetPurchaseRecordsUseCase $getPurchaseRecordsUseCase
     ) {
-        $this->purchaseRecordRepository = $purchaseRecordRepository;
+        $this->getPurchaseRecordsUseCase = $getPurchaseRecordsUseCase;
     }
 
-    public function __invoke(Request $request): Response
+    public function __invoke(GetPurchaseRecordsRequest $request): Response
     {
-        $purchaseRecordDTOS = $this->purchaseRecordRepository->getPurchaseRecordsRows(
-            $request->input('page', 1),
-            $request->input('paginate', 15),
-        );
+        $period = null;
+        if ($request->filled('period')) {
+            $period = new Period(
+                $request->input('period.month'),
+                $request->input('period.year'),
+            );
+        }
 
-        $totalPages = $this->purchaseRecordRepository->getTotalPages($request->input('paginate', 15));
+        $page = $request->input('page', 1);
+        $paginate = $request->input('paginate', 15);
+
+        [$purchaseRecordDTOS, $totalPages] = $this->getPurchaseRecordsUseCase->__invoke($page, $paginate, $period);
 
         return response([
             'data' => PurchaseRecordDtoResource::collection($purchaseRecordDTOS),
-            'page' => $request->input('page', 1),
-            'paginate' => $request->input('paginate', 15),
+            'page' => $page,
+            'paginate' => $paginate,
             'total_pages' => $totalPages,
         ], 200);
     }

@@ -12,7 +12,7 @@ class Period
 
     public readonly int $year;
 
-    private function __construct(int $month, int $year)
+    public function __construct(int $month, int $year)
     {
         $this->month = $month;
         $this->year = $year;
@@ -50,5 +50,10 @@ class Period
             $newMonth,
             $newYear
         );
+    }
+
+    public function equals(self $period): bool
+    {
+        return $this->year === $period->year && $this->month === $period->month;
     }
 }
