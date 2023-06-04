@@ -1,0 +1,76 @@
+openapi: 3.0.0
+info:
+  title: Documentación de los header Authentication
+  version: 1.0.0
+paths:
+#get voucher
+  /vouchers:
+    get:
+      summary: Obtener vales
+      tags:
+        - Vales
+      security:
+        - has-permission: [MANAGE_VOUCHERS]
+      responses:
+        '200':
+          description: OK
+
+
+  #get voucher(voucher ID)
+  /vouchers/{voucherID}:
+    get:
+      summary: Obtener un vale específico
+      tags:
+        - Vales
+      security:
+        - has-permission: [MANAGE_VOUCHERS]
+      parameters:
+        - name: voucherID
+          in: path
+          description: ID del vale
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+
+#Post voucher invoices
+  /vouchers/invoices:
+    post:
+      summary: Crear una factura para un vale
+      tags:
+        - Facturas
+      security:
+        - has-permission: [MANAGE_VOUCHERS]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Invoice'
+      responses:
+        '200':
+          description: OK
+
+components:
+  schemas:
+    Invoice:
+      type: object
+      properties:
+      # Agrega las propiedades del objeto Invoice aquí según corresponda
+      # Ejemplo:
+      # propiedad1:
+      #   type: string
+      # propiedad2:
+      #   type: integer
+      # ...
+
+securitySchemes:
+  has-permission:
+    type: apiKey
+    name: Authorization
+    in: header
+
+
+
