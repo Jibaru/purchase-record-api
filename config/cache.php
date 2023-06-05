@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Str;
 
+// Optimización de cache para consultas
+    $users = Cache::remember('users', $minutes, function () {
+        return DB::table('users')->get();
+    });
 return [
 
     /*
