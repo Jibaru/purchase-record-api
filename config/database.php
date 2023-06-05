@@ -151,3 +151,9 @@ return [
     ],
 
 ];
+
+// Indexar consultas de bases de datos
+Schema::table('users', function ($table) {
+    $table->index('email');
+});
+
