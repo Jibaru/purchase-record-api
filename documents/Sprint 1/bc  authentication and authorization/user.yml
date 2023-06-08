@@ -1,0 +1,67 @@
+openapi: 3.0.0
+info:
+    title: Documentación de API autenticacion
+    version: 1.0.0
+paths:
+    /users:
+        get:
+            summary: Obtener usuarios
+            tags:
+                - Usuarios
+            responses:
+                '200':
+                    description: Respuesta exitosa
+                    content:
+                        application/json:
+                            schema:
+                            # Define la estructura de la respuesta aquí según corresponda
+
+    /users/{userID}/permissions:
+        get:
+            summary: Obtener permisos de usuario
+            tags:
+                - Usuarios
+            parameters:
+                - name: userID
+                  in: path
+                  description: ID del usuario
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: Respuesta exitosa
+                    content:
+                        application/json:
+                            schema:
+                            # Define la estructura de la respuesta aquí según corresponda
+
+        post:
+            summary: Agregar permiso a usuario
+            tags:
+                - Usuarios
+            parameters:
+                - name: userID
+                  in: path
+                  description: ID del usuario
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: Respuesta exitosa
+
+        delete:
+            summary: Eliminar permiso de usuario
+            tags:
+                - Usuarios
+            parameters:
+                - name: userID
+                  in: path
+                  description: ID del usuario
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                '200':
+                    description: Respuesta exitosa

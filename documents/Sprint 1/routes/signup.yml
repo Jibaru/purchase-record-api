@@ -1,0 +1,58 @@
+openapi: 3.0.0
+info:
+  title: Ruta signup
+  version: 1.0.0
+paths:
+  /users/signup:
+    post:
+      summary: Registro de usuario
+      tags:
+        - Usuarios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSignUp'
+      responses:
+        '200':
+          description: OK
+
+  /users/login:
+    post:
+      summary: Inicio de sesión de usuario
+      tags:
+        - Usuarios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+      responses:
+        '200':
+          description: OK
+
+components:
+  schemas:
+    UserSignUp:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+
+    UserLogin:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
