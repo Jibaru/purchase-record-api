@@ -6,6 +6,10 @@ use Core\Auth\Domain\Repositories\PermissionRepository;
 use Core\Auth\Domain\Repositories\UserRepository;
 use Core\Auth\Infrastructure\Repositories\MySqlPermissionRepository;
 use Core\Auth\Infrastructure\Repositories\MySqlUserRepository;
+use Core\Inventory\Domain\Repositories\SupplierItemRepository;
+use Core\Inventory\Domain\Repositories\SupplierRepository;
+use Core\Inventory\Infrastructure\Repositories\MySqlSupplierItemRepository;
+use Core\Inventory\Infrastructure\Repositories\MySqlSupplierRepository;
 use Core\PurchaseRecords\Application\Exportables\CompletePurchaseRecordsExportable;
 use Core\PurchaseRecords\Application\Exportables\PurchaseRecordsExportable;
 use Core\PurchaseRecords\Domain\Repositories\PurchaseRecordRepository;
@@ -26,6 +30,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(PurchaseRecordRepository::class, MySqlPurchaseRecordRepository::class);
         $this->app->bind(UserRepository::class, MySqlUserRepository::class);
         $this->app->bind(PurchaseRecordsExportable::class, CompletePurchaseRecordsExportable::class);
+        $this->app->bind(SupplierRepository::class, MySqlSupplierRepository::class);
+        $this->app->bind(SupplierItemRepository::class, MySqlSupplierItemRepository::class);
     }
 
     /**
